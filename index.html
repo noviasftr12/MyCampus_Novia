@@ -40,14 +40,18 @@
 
         body {
             background-color: var(--bg-main);
+            /* Menggunakan min-height dinamis berbasis viewport mobile terkini */
             min-height: 100vh;
+            min-height: 100dvh;
             overflow: hidden;
             color: var(--text-body);
         }
 
         .page {
             width: 100vw;
+            /* Menggunakan 100dvh (Dynamic Viewport Height) agar pas dengan layar HP */
             height: 100vh;
+            height: 100dvh;
             position: relative;
             display: none;
             flex-direction: column;
@@ -96,7 +100,7 @@
         .user-profile h4 { font-size: 0.95rem; color: var(--text-title); font-weight: 700; }
         .user-profile p { font-size: 0.75rem; color: var(--text-muted); margin-top: 1px; }
         
-        .sub-content-container { flex: 1; overflow-y: auto; padding: 1.2rem; padding-bottom: 100px; }
+        .sub-content-container { flex: 1; overflow-y: auto; padding: 1.2rem; padding-bottom: 90px; }
         .sub-page { display: none; }
         .sub-page.active-sub { display: block; animation: fadeIn 0.4s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
@@ -113,7 +117,7 @@
         .section-title { font-size: 0.95rem; color: var(--text-title); margin: 1.6rem 0 0.8rem 0; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
         .section-title span { font-size: 0.7rem; color: var(--primary); font-weight: 600; cursor: pointer; }
         
-        .day-divider { font-size: 0.8rem; font-weight: 700; color: var(--primary); background-color: var(--primary-light); padding: 6px 12px; border-radius: 6px; margin: 1.5rem 0 0.8rem 0; display: inline-block; }
+        .day-divider { font-size: 0.8rem; font-weight: 700; color: var(--primary); background-color: var(--primary-light); padding: 6px 12px; border-radius: 6px; margin: 1.5rem 0 0.8rem 0; display: inline-block; width: 100%; }
 
         .menu-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 1.5rem; }
         .menu-item { background-color: var(--bg-card); padding: 1.2rem 0.25rem; border-radius: var(--radius-md); text-align: center; border: 1px solid var(--border); cursor: pointer; transition: var(--transition); }
@@ -134,8 +138,11 @@
 
         /* --- JADWAL KULIAH STYLES --- */
         .schedule-list { display: flex; flex-direction: column; gap: 12px; }
-        .schedule-item-card { background-color: var(--bg-card); border-radius: var(--radius-md); border: 1px solid var(--border); padding: 1.1rem; display: flex; justify-content: space-between; align-items: center; }
-        .subject-main { display: flex; gap: 14px; align-items: center; }
+        .schedule-item-card { background-color: var(--bg-card); border-radius: var(--radius-md); border: 1px solid var(--border); padding: 1.1rem; display: flex; flex-direction: column; gap: 14px; }
+        .schedule-row { display: flex; justify-content: space-between; align-items: center; width: 100%; border-bottom: 1px dashed var(--border); padding-bottom: 10px; }
+        .schedule-row:last-child { border-bottom: none; padding-bottom: 0; }
+        
+        .subject-main { display: flex; gap: 14px; align-items: center; flex: 1; }
         .time-badge { background-color: #f1f5f9; padding: 0.5rem 0.4rem; border-radius: 8px; text-align: center; min-width: 60px; height: max-content; flex-shrink: 0; }
         .time-badge .start { font-size: 0.8rem; font-weight: 700; color: var(--text-title); }
         .time-badge .end { font-size: 0.65rem; color: var(--text-muted); margin-top: 1px; }
@@ -197,10 +204,10 @@
         .profile-status-pill { font-size: 0.65rem; font-weight: 700; padding: 4px 10px; border-radius: 12px; margin-top: 8px; display: inline-block; }
         
         .academic-details-list { background-color: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); margin-top: 1rem; overflow: hidden; }
-        .ac-row { display: flex; justify-content: space-between; padding: 1rem; border-bottom: 1px solid var(--border); font-size: 0.75rem; align-items: center; }
+        .ac-row { display: flex; justify-content: space-between; padding: 1rem; border-bottom: 1px solid var(--border); font-size: 0.75rem; align-items: center; gap: 10px; }
         .ac-row:last-child { border-bottom: none; }
-        .ac-row span:first-child { color: var(--text-muted); font-weight: 500; }
-        .ac-row span:last-child { color: var(--text-title); font-weight: 600; text-align: right; }
+        .ac-row span:first-child { color: var(--text-muted); font-weight: 500; flex-shrink: 0; }
+        .ac-row span:last-child { color: var(--text-title); font-weight: 600; text-align: right; word-break: break-word; }
         .logout-btn { display: flex; align-items: center; justify-content: center; gap: 8px; background-color: var(--danger-light); color: var(--danger); border: none; padding: 14px; width: 100%; border-radius: var(--radius-md); font-size: 0.8rem; font-weight: 700; margin-top: 1.5rem; cursor: pointer; transition: var(--transition); }
 
         /* Color Utility */
@@ -216,8 +223,19 @@
         .pill-danger { background-color: var(--danger-light); color: var(--danger); }
         .pill-info { background-color: var(--info-light); color: var(--info); }
 
-        /* --- GLOBAL BOTTOM NAVIGATION --- */
-        .bottom-nav { position: absolute; bottom: 0; width: 100%; background-color: var(--bg-card); display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid var(--border); z-index: 10; }
+        /* --- GLOBAL BOTTOM NAVIGATION FIXED --- */
+        .bottom-nav { 
+            position: absolute; 
+            bottom: 0; 
+            left: 0;
+            width: 100%; 
+            background-color: var(--bg-card); 
+            display: flex; 
+            justify-content: space-around; 
+            padding: 12px 0 calc(12px + env(safe-area-inset-bottom)); /* Ditambah safe area untuk iPhone berponi bawah */
+            border-top: 1px solid var(--border); 
+            z-index: 999; 
+        }
         .nav-link { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: var(--text-muted); font-size: 0.65rem; font-weight: 600; cursor: pointer; transition: var(--transition); position: relative; width: 18%; }
         .nav-link i { font-size: 1.1rem; margin-bottom: 2px; }
         .nav-link.active { color: var(--primary); }
@@ -231,11 +249,12 @@
             .stats-banner { padding: 1.8rem; border-radius: 20px; }
             .menu-grid { grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 0; }
             .menu-item { padding: 1.5rem 0.5rem; border-radius: 14px; }
-            .schedule-item-card, .task-item-card, .invoice-card, .notif-item, .announcement-card { padding: 1.2rem; border-radius: 14px; }
+            .schedule-item-card { padding: 1.2rem; border-radius: 14px; flex-direction: row; }
+            .task-item-card, .invoice-card, .notif-item, .announcement-card { padding: 1.2rem; border-radius: 14px; }
             .profile-desktop-layout { display: grid; grid-template-columns: 1fr 1.5fr; gap: 24px; align-items: start; }
             .profile-card-header { padding: 2.5rem 2rem; border-radius: 20px; }
             .academic-details-list { margin-top: 0; border-radius: 20px; }
-            .bottom-nav { justify-content: center; gap: 5%; padding: 12px 0; }
+            .bottom-nav { justify-content: center; gap: 5%; padding: 14px 0; }
             .nav-link { font-size: 0.75rem; } .nav-link i { font-size: 1.2rem; }
         }
     </style>
@@ -273,7 +292,7 @@
         
         <header class="app-header">
             <div class="user-profile">
-                <img src="aku.jpg">
+                <img src="aku.jpg" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'">
                 <div>
                     <h4>Novia Safitri</h4>
                     <p>Fakultas Ilmu Komputer • D3 Komputerisasi Akuntansi</p>
@@ -320,17 +339,19 @@
 
                         <h3 class="section-title">Kuliah Hari Ini <span>Selengkapnya</span></h3>
                         <div class="schedule-item-card" style="padding: 0.9rem;" onclick="switchSubPage('sub-jadwal', 1)">
-                            <div class="subject-main">
-                                <div class="time-badge" style="background-color: var(--primary-light); color: var(--primary);">
-                                    <div class="start" style="color: var(--primary);">14:00</div>
-                                    <div class="end">16:30</div>
+                            <div class="schedule-row" style="border: none; padding: 0;">
+                                <div class="subject-main">
+                                    <div class="time-badge" style="background-color: var(--primary-light); color: var(--primary);">
+                                        <div class="start" style="color: var(--primary);">14:00</div>
+                                        <div class="end">16:30</div>
+                                    </div>
+                                    <div class="subject-details">
+                                        <h4 style="font-size: 0.8rem;">Pemrograman Web Mobile</h4>
+                                        <p style="font-size: 0.65rem;"><i class="fa-solid fa-location-dot"></i> Lab A302</p>
+                                    </div>
                                 </div>
-                                <div class="subject-details">
-                                    <h4 style="font-size: 0.8rem;">Pemograman Web Mobile </h4>
-                                    <p style="font-size: 0.65rem;"><i class="fa-solid fa-location-dot"></i> Lab A302</p>
-                                </div>
+                                <div class="absensi-status"><span class="attendance-pill pill-warning" style="font-size: 0.6rem;">Nanti</span></div>
                             </div>
-                            <div class="absensi-status"><span class="attendance-pill pill-warning" style="font-size: 0.6rem;">Nanti</span></div>
                         </div>
                     </div>
 
@@ -366,54 +387,72 @@
                 </div>
                 <h3 class="section-title">Kalender Mingguan Anda</h3>
                 <div class="schedule-list">
+                    
                     <div class="day-divider">Senin</div>
                     <div class="schedule-item-card">
-                        <div class="subject-main">
-                            <div class="time-badge"><div class="start">08:00</div><div class="end">10:00</div></div>
-                            <div class="subject-details">
-                                <h4>Sistem Informasi Akuntansi</h4>
-                                <p><i class="fa-solid fa-user-tie"></i> Dr. Nano Suryatna, S.E,Ak., M.Kom.,</p>
-                                <div class="meta"><span class="text-blue"><i class="fa-solid fa-building"></i> Gedung H - R.302</span></div>
+                        <div class="schedule-row">
+                            <div class="subject-main">
+                                <div class="time-badge"><div class="start">08:00</div><div class="end">10:00</div></div>
+                                <div class="subject-details">
+                                    <h4>Sistem Informasi Akuntansi</h4>
+                                    <p><i class="fa-solid fa-user-tie"></i> Dr. Nano Suryatna, S.E,Ak., M.Kom.</p>
+                                    <div class="meta"><span class="text-blue"><i class="fa-solid fa-building"></i> Gedung H - R.302</span></div>
+                                </div>
                             </div>
-                                    <div class="time-badge"><div class="start">08:00</div><div class="end">10:00</div></div>
-                            <div class="subject-details">
-                                <h4>Analisis dan Perncangan Sistem Informasi</h4>
-                                <p><i class="fa-solid fa-user-tie"></i> Ricky Rohmanto, M.Kom, CDM</p>
-                                <div class="meta"><span class="text-blue"><i class="fa-solid fa-building"></i> Gedung H - R.302</span></div>
-                            </div>
+                            <div class="absensi-status"><span class="attendance-pill pill-success">Selesai</span></div>
                         </div>
-                        <div class="absensi-status"><span class="attendance-pill pill-success">Selesai</span></div>
+                        <div class="schedule-row">
+                            <div class="subject-main">
+                                <div class="time-badge"><div class="start">10:00</div><div class="end">12:00</div></div>
+                                <div class="subject-details">
+                                    <h4>Analisis dan Perancangan SI</h4>
+                                    <p><i class="fa-solid fa-user-tie"></i> Ricky Rohmanto, M.Kom, CDM</p>
+                                    <div class="meta"><span class="text-blue"><i class="fa-solid fa-building"></i> Gedung H - R.302</span></div>
+                                </div>
+                            </div>
+                            <div class="absensi-status"><span class="attendance-pill pill-success">Selesai</span></div>
+                        </div>
                     </div>
-                         <div class="day-divider">Selasa</div>
+                    
+                    <div class="day-divider">Selasa</div>
                     <div class="schedule-item-card">
-                        <div class="subject-main">
-                            <div class="time-badge"><div class="start">08:00</div><div class="end">10:00</div></div>
-                            <div class="subject-details">
-                                <h4>Manajemen Keuangan</h4>
-                                <p><i class="fa-solid fa-user-tie"></i> Prof. Haji Sugiyanto, S.E.,M.Sc</p>
-                                <div class="meta"><span class="text-blue"><i class="fa-solid fa-building"></i> Ruang A12</span></div>
+                        <div class="schedule-row">
+                            <div class="subject-main">
+                                <div class="time-badge"><div class="start">08:00</div><div class="end">10:00</div></div>
+                                <div class="subject-details">
+                                    <h4>Manajemen Keuangan</h4>
+                                    <p><i class="fa-solid fa-user-tie"></i> Prof. Haji Sugiyanto, S.E., M.Sc</p>
+                                    <div class="meta"><span class="text-blue"><i class="fa-solid fa-building"></i> Ruang A12</span></div>
+                                </div>
                             </div>
-                            <div class="time-badge"><div class="start">08:00</div><div class="end">10:00</div></div>
-                            <div class="subject-details">
-                                <h4>Pemograman WEB II</h4>
-                                <p><i class="fa-solid fa-user-tie"></i> Anjas Triyana,M.M, M.Kom</p>
-                                <div class="meta"><span class="text-blue"><i class="fa-solid fa-building"></i> Gedung H - R.302</span></div>
-                            </div>
+                            <div class="absensi-status"><span class="attendance-pill pill-success">Selesai</span></div>
                         </div>
-                            
-                        <div class="absensi-status"><span class="attendance-pill pill-success">Selesai</span></div>
+                        <div class="schedule-row">
+                            <div class="subject-main">
+                                <div class="time-badge"><div class="start">10:00</div><div class="end">12:00</div></div>
+                                <div class="subject-details">
+                                    <h4>Pemrograman WEB II</h4>
+                                    <p><i class="fa-solid fa-user-tie"></i> Anjas Triyana, M.M, M.Kom</p>
+                                    <div class="meta"><span class="text-blue"><i class="fa-solid fa-building"></i> Gedung H - R.302</span></div>
+                                </div>
+                            </div>
+                            <div class="absensi-status"><span class="attendance-pill pill-success">Selesai</span></div>
+                        </div>
                     </div>
+                    
                     <div class="day-divider" style="background-color: #2563eb; color: #fff;">Rabu (Hari Ini)</div>
                     <div class="schedule-item-card" style="border-left: 4px solid var(--warning);">
-                        <div class="subject-main">
-                            <div class="time-badge" style="background-color: var(--warning-light);"><div class="start" style="color: var(--warning)">14:00</div><div class="end">16:30</div></div>
-                            <div class="subject-details">
-                                <h4>Pemograman Web Mobile</h4>
-                                <p><i class="fa-solid fa-user-tie"></i> Iin Solihin, M.Kom</p>
-                                <div class="meta"><span class="text-blue"><i class="fa-solid fa-building"></i> Lab Riset Robotika</span></div>
+                        <div class="schedule-row" style="border: none; padding: 0;">
+                            <div class="subject-main">
+                                <div class="time-badge" style="background-color: var(--warning-light);"><div class="start" style="color: var(--warning)">14:00</div><div class="end">16:30</div></div>
+                                <div class="subject-details">
+                                    <h4>Pemrograman Web Mobile</h4>
+                                    <p><i class="fa-solid fa-user-tie"></i> Iin Solihin, M.Kom</p>
+                                    <div class="meta"><span class="text-blue"><i class="fa-solid fa-building"></i> Lab A302</span></div>
+                                </div>
                             </div>
+                            <div class="absensi-status"><span class="attendance-pill pill-warning">Berlangsung</span></div>
                         </div>
-                        <div class="absensi-status"><span class="attendance-pill pill-warning">Berlangsung</span></div>
                     </div>
                 </div>
             </div>
@@ -483,7 +522,7 @@
                     
                     <div class="profile-card-header">
                         <div class="avatar-wrapper">
-                            <img src="aku.jpg">
+                            <img src="aku.jpg" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'">
                             <div class="verified-badge"><i class="fa-solid fa-check"></i></div>
                         </div>
                         <h3>Novia Safitri</h3>
