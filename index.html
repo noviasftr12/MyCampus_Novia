@@ -100,7 +100,7 @@
         .user-profile h4 { font-size: 0.95rem; color: var(--text-title); font-weight: 700; }
         .user-profile p { font-size: 0.75rem; color: var(--text-muted); margin-top: 1px; }
         
-        .sub-content-container { flex: 1; overflow-y: auto; padding: 1.2rem; padding-bottom: 90px; }
+        .sub-content-container { flex: 1; overflow-y: auto; padding: 1.2rem; padding-bottom: 100px; }
         .sub-page { display: none; }
         .sub-page.active-sub { display: block; animation: fadeIn 0.4s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
@@ -184,6 +184,59 @@
         .va-box { background-color: var(--bg-main); padding: 10px; border-radius: 8px; border: 1px dashed var(--border); text-align: center; margin-top: 0.8rem; }
         .va-number { font-family: monospace; font-size: 1rem; font-weight: 700; color: var(--primary); letter-spacing: 1px; margin-top: 2px; }
 
+        /* --- SMART SCANNER --- */
+        .scanner-viewport {
+            background-color: #000;
+            border-radius: var(--radius-lg);
+            height: 260px;
+            margin: 1.5rem 0;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            border: 2px solid var(--border);
+        }
+        .scanner-laser {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(to right, transparent, var(--danger), transparent);
+            box-shadow: 0 0 8px var(--danger);
+            animation: scanMoving 2s linear infinite;
+        }
+        .scanner-frame {
+            width: 160px;
+            height: 160px;
+            border: 2px dashed #fff;
+            border-radius: var(--radius-md);
+            position: relative;
+            box-shadow: 0 0 0 2000px rgba(0,0,0,0.5);
+        }
+        @keyframes scanMoving {
+            0% { top: 10%; }
+            50% { top: 90%; }
+            100% { top: 10%; }
+        }
+        .btn-scan-action {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: block;
+            margin: 1rem auto;
+            width: 100%;
+            max-width: 250px;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+        }
+
         /* --- NOTIFIKASI HUB --- */
         .notif-list { display: flex; flex-direction: column; gap: 10px; }
         .notif-item { display: flex; gap: 12px; background-color: var(--bg-card); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border); position: relative; }
@@ -236,8 +289,9 @@
             border-top: 1px solid var(--border); 
             z-index: 999; 
         }
-        .nav-link { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: var(--text-muted); font-size: 0.65rem; font-weight: 600; cursor: pointer; transition: var(--transition); position: relative; width: 18%; }
-        .nav-link i { font-size: 1.1rem; margin-bottom: 2px; }
+        /* Penyesuaian lebar elemen agar 6 navigasi muat dengan rapi di HP */
+        .nav-link { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: var(--text-muted); font-size: 0.6rem; font-weight: 600; cursor: pointer; transition: var(--transition); position: relative; width: 16.6%; }
+        .nav-link i { font-size: 1rem; margin-bottom: 2px; }
         .nav-link.active { color: var(--primary); }
         .nav-badge-dot { position: absolute; top: 1px; right: 28%; width: 7px; height: 7px; background-color: var(--danger); border-radius: 50%; border: 1px solid #fff; }
 
@@ -255,7 +309,7 @@
             .profile-card-header { padding: 2.5rem 2rem; border-radius: 20px; }
             .academic-details-list { margin-top: 0; border-radius: 20px; }
             .bottom-nav { justify-content: center; gap: 5%; padding: 14px 0; }
-            .nav-link { font-size: 0.75rem; } .nav-link i { font-size: 1.2rem; }
+            .nav-link { font-size: 0.75rem; width: auto; } .nav-link i { font-size: 1.2rem; }
         }
     </style>
 </head>
@@ -368,7 +422,7 @@
 
                         <h3 class="section-title">Pengumuman Kampus</h3>
                         <div class="announcement-box">
-                            <div class="announcement-card" onclick="switchSubPage('sub-notifikasi', 3)">
+                            <div class="announcement-card" onclick="switchSubPage('sub-notifikasi', 4)">
                                 <div class="announce-badge bg-info-light"><i class="fa-solid fa-bullhorn text-info"></i></div>
                                 <div class="announce-details">
                                     <h4>Penutupan Pengajuan Keringanan UKT</h4>
@@ -473,6 +527,25 @@
                 </div>
             </div>
 
+            <div id="sub-scanner" class="sub-page">
+                <h3 class="section-title">Smart Scanner Kampus</h3>
+                <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1rem;">
+                    Gunakan kamera perangkat untuk memindai QR Code Presensi Kelas, Validasi Event, atau Keperluan Perpustakaan.
+                </p>
+                
+                <div class="scanner-viewport">
+                    <div class="scanner-laser"></div>
+                    <div class="scanner-frame"></div>
+                    <div style="position: absolute; bottom: 15px; color: #fff; font-size: 0.7rem; font-weight: 500; text-shadow: 1px 1px 2px #000; letter-spacing: 0.5px;">
+                        Posisikan Kode QR di dalam area kotak
+                    </div>
+                </div>
+
+                <button class="btn-scan-action" onclick="simulasiScanSukses()">
+                    <i class="fa-solid fa-bolt" style="margin-right: 6px;"></i> Simulasi Pindai QR
+                </button>
+            </div>
+
             <div id="sub-notifikasi" class="sub-page">
                 <h3 class="section-title">Kotak Masuk Notifikasi</h3>
                 <div class="notif-list">
@@ -556,12 +629,13 @@
             <a class="nav-link active" onclick="switchSubPage('sub-home', 0)"><i class="fa-solid fa-house"></i><span style="margin-top: 3px;">Beranda</span></a>
             <a class="nav-link" onclick="switchSubPage('sub-jadwal', 1)"><i class="fa-solid fa-calendar-days"></i><span style="margin-top: 3px;">Jadwal</span></a>
             <a class="nav-link" onclick="switchSubPage('sub-tugas', 2)"><i class="fa-solid fa-list-check"></i><span style="margin-top: 3px;">Tugas</span></a>
-            <a class="nav-link" id="nav-notif" onclick="switchSubPage('sub-notifikasi', 3)">
+            <a class="nav-link" onclick="switchSubPage('sub-scanner', 3)"><i class="fa-solid fa-qrcode"></i><span style="margin-top: 3px;">Scanner</span></a>
+            <a class="nav-link" id="nav-notif" onclick="switchSubPage('sub-notifikasi', 4)">
                 <i class="fa-solid fa-bell"></i>
                 <span class="nav-badge-dot" id="unread-dot"></span>
                 <span style="margin-top: 3px;">Notif</span>
             </a>
-            <a class="nav-link" onclick="switchSubPage('sub-profil', 4)"><i class="fa-solid fa-circle-user"></i><span style="margin-top: 3px;">Profil</span></a>
+            <a class="nav-link" onclick="switchSubPage('sub-profil', 5)"><i class="fa-solid fa-circle-user"></i><span style="margin-top: 3px;">Profil</span></a>
         </nav>
     </div>
 
@@ -601,6 +675,12 @@
                 const unreadDot = document.getElementById('unread-dot');
                 if(unreadDot) unreadDot.style.display = 'none';
             }
+        }
+
+        // Fungsi Simulasi Pindai QR Code untuk modul Scanner
+        function simulasiScanSukses() {
+            alert("Scan Sukses!\nPresensi kehadiran pada kelas 'Pemrograman Web Mobile' berhasil dicatat pada pukul " + new Date().toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'}) + " WIB.");
+            switchSubPage('sub-home', 0);
         }
     </script>
 </body>
