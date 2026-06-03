@@ -207,6 +207,7 @@
             background: linear-gradient(to right, transparent, var(--danger), transparent);
             box-shadow: 0 0 8px var(--danger);
             animation: scanMoving 2s linear infinite;
+            z-index: 2;
         }
         .scanner-frame {
             width: 160px;
@@ -215,6 +216,7 @@
             border-radius: var(--radius-md);
             position: relative;
             box-shadow: 0 0 0 2000px rgba(0,0,0,0.5);
+            z-index: 1;
         }
         @keyframes scanMoving {
             0% { top: 10%; }
@@ -536,7 +538,7 @@
                 <div class="scanner-viewport">
                     <div class="scanner-laser"></div>
                     <div class="scanner-frame"></div>
-                    <div style="position: absolute; bottom: 15px; color: #fff; font-size: 0.7rem; font-weight: 500; text-shadow: 1px 1px 2px #000; letter-spacing: 0.5px;">
+                    <div style="position: absolute; bottom: 15px; color: #fff; font-size: 0.7rem; font-weight: 500; text-shadow: 1px 1px 2px #000; letter-spacing: 0.5px; z-index: 3;">
                         Posisikan Kode QR di dalam area kotak
                     </div>
                 </div>
@@ -640,6 +642,9 @@
     </div>
 
     <script>
+        // Variabel global untuk menyimpan objek stream kamera aktif
+        let videoStream = null;
+
         document.addEventListener("DOMContentLoaded", () => {
             const splashScreen = document.getElementById("splash-screen");
             const loginPage = document.getElementById("login-page");
@@ -674,6 +679,56 @@
             if(subPageId === 'sub-notifikasi') {
                 const unreadDot = document.getElementById('unread-dot');
                 if(unreadDot) unreadDot.style.display = 'none';
+            }
+
+            // OTOMATISASI KAMERA: Hidupkan jika masuk halaman scanner, matikan jika keluar halaman
+            if (subPageId === 'sub-scanner') {
+                nyalakanKamera();
+            } else {
+                matikanKamera();
+            }
+        }
+
+        // --- SISTEM PENANGANAN KAMERA BARU ---
+        function nyalakanKamera() {
+            const viewport = document.querySelector('.scanner-viewport');
+            
+            // Cek jika elemen <video> belum ada, kita buat baru secara dinamis
+            let videoElement = document.getElementById('webcam-view');
+            if (!videoElement) {
+                videoElement = document.createElement('video');
+                videoElement.id = 'webcam-view';
+                videoElement.style.position = 'absolute';
+                videoElement.style.width = '100%';
+                videoElement.style.height = '100%';
+                videoElement.style.objectFit = 'cover';
+                videoElement.style.zIndex = '0'; // Berada di bawah garis laser dan bingkai kotak
+                videoElement.setAttribute('playsinline', true); // Mencegah fullscreen otomatis di iOS/Safari
+                viewport.appendChild(videoElement);
+            }
+
+            // Meminta izin membuka kamera belakang perangkat smartphone
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+                .then(function(stream) {
+                    videoStream = stream;
+                    videoElement.srcObject = stream;
+                    videoElement.play();
+                })
+                .catch(function(err) {
+                    console.error("Gagal mengakses kamera: ", err);
+                    alert("Aplikasi tidak dapat mengakses kamera asli. Pastikan Anda membuka web ini menggunakan protokol HTTPS/localhost dan memberikan izin akses kamera.");
+                });
+        }
+
+        function matikanKamera() {
+            // Hentikan sensor kamera agar baterai tidak boros saat pindah sub-page
+            if (videoStream) {
+                videoStream.getTracks().forEach(track => track.stop());
+                videoStream = null;
+            }
+            const videoElement = document.getElementById('webcam-view');
+            if (videoElement) {
+                videoElement.remove();
             }
         }
 
